@@ -6,6 +6,8 @@ using UnityEditor;
 //[CanEditMultipleObjects]
 public class tool_Renaming : EditorWindow
 {
+    public float removeButtonHorizontalPos = 0f;
+    public float removeButtonVerticalPos = 500f;
     private GUIStyle boxStyle = new GUIStyle();
     private string textFormatting;
 
@@ -18,8 +20,6 @@ public class tool_Renaming : EditorWindow
     private static object[] DragDropArea()
     {
         EventType dragEvent = Event.current.type;
-        //GUILayout.Box("Original", GUILayout.Width(Screen.width/2), GUILayout.Height(Screen.height/2));
-
         if (dragEvent == EventType.DragUpdated || dragEvent == EventType.DragPerform)
         {
             DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
@@ -35,10 +35,12 @@ public class tool_Renaming : EditorWindow
 
     private void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(10, 10, 100, 100));
+        GUILayout.Label("Click & Drag GameObjects Here");
+        GUILayout.BeginArea(new Rect(0f, (Screen.height/1.8f), 100, 100));
         var removeObjects = GUILayout.Button("Remove All", GUILayout.Width(100f));
-        GUILayout.Button("Another Button");
         GUILayout.EndArea();
+        GUILayout.Box("Original\n--------\n"+textFormatting, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height / 4));
+        GUILayout.Box("New\n-----\n", GUILayout.Width(Screen.width), GUILayout.Height(Screen.height / 4));
         if (removeObjects)
         {
             textFormatting = "";
@@ -54,7 +56,7 @@ public class tool_Renaming : EditorWindow
             foreach (GameObject obj in selectedObjects)
             {
                 textFormatting += obj.name.ToString() + "\n";
-                obj.name = "newName";
+                //obj.name = "newName";
             }
         }
         Debug.Log(textFormatting);
