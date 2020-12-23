@@ -154,6 +154,7 @@ public class tool_Renaming : EditorWindow
                     obj.name = newGameObjectNames[i].ToString();
                     i += 1;
                 }
+                Close();
             }
         }
     }
