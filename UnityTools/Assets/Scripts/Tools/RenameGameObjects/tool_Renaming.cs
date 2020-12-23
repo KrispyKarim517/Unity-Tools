@@ -5,18 +5,21 @@ using UnityEditor;
 
 public class tool_Renaming : EditorWindow
 {
-    public float removeButtonHorizontalPos = 0f;
-    public float removeButtonVerticalPos = 500f;
-    private GUIStyle boxStyle = new GUIStyle();
+    private Vector2 scrollPosition;
     private string textFormatting;
+    private List<object> uniqueCheck = new List<object>();
+    private object[] newGameObjectNames;
+
+    private string newName = "";
+    private bool newNameAdded = false;
+
     private string prefix = "";
-    private bool prefixAdded = false;
     private string suffix = "";
-    private bool suffixAdded = false;
-    HashSet<Object> uniqueCheck = new HashSet<Object>();
-    Vector2 scrollPosition;
 
+    private bool enableEnumeration = false;
+    int enumNum = 0;
 
+    private bool confirmChanges = false;
 
     //Creates a custom unity window
     [MenuItem("Tools/Rename GameObjects")]
@@ -37,7 +40,7 @@ public class tool_Renaming : EditorWindow
             if (dragEvent == EventType.DragPerform)
             {
                 DragAndDrop.AcceptDrag();
-                return DragAndDrop.objectReferences;
+                return DragAndDrop.objectReferences; //List of dragged objects
             }
             Event.current.Use();
         }
@@ -49,7 +52,7 @@ public class tool_Renaming : EditorWindow
     //Handles text formatting of dragged objects
     private void DrawGameObjectNames()
     {
-        var removeObjects = GUILayout.Button("Remove All", GUILayout.Width(100f));
+        var removeObjects = GUILayout.Button("Remove Selected", GUILayout.Width(125f));
         if (removeObjects)
         {
             textFormatting = "";
@@ -66,25 +69,44 @@ public class tool_Renaming : EditorWindow
                 if (!uniqueCheck.Contains(obj))
                 {
                     textFormatting += obj.name.ToString() + "\n";
-                    uniqueCheck.Add(obj);
+                    uniqueCheck.Add(obj); //Prevents duplicates from being added to list
                 }
-                //obj.name = "newName";
             }
         }
     }
 
     
 
-    //
-    private void DrawPrefixSuffix()
+    //Edits the name of a GameObject based on the specified parameters
+    private void DrawEdits()
     {
-        if (GUILayout.Button("Confirm", GUILayout.Width(100f)))
+        string enumNumStr = "";
+        if (GUILayout.Button("Preview Changes", GUILayout.Width(125f)) || confirmChanges)
         {
             textFormatting = "";
+            enumNum = 0;
+            newGameObjectNames = new object[uniqueCheck.Count];
+            int i = 0;
             foreach (GameObject obj in uniqueCheck)
             {
-                textFormatting += prefix + obj.name.ToString() + suffix + "\n";
+                enumNum += 1;
+                if (enableEnumeration)
+                {
+                    enumNumStr = enumNum.ToString();
+                }
+                if (newNameAdded == false)
+                {
+                    textFormatting += prefix + obj.name.ToString() + suffix + enumNumStr + "\n";
+                    newGameObjectNames[i] = (prefix + obj.name.ToString() + suffix + enumNumStr);
+                }
+                else if (newNameAdded == true)
+                {
+                    textFormatting += prefix + newName + suffix + enumNumStr + "\n";
+                    newGameObjectNames[i] = (prefix + newName + suffix + enumNumStr);
+                }
+                i += 1;
             }
+            confirmChanges = false;
         }
     }
 
@@ -93,71 +115,46 @@ public class tool_Renaming : EditorWindow
     //Manages custom window interface display
     private void OnGUI()
     {
+        //GUI layout design
         GUILayout.Label("Click & Drag GameObjects Here\n-------------------------------");
         scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(Screen.width), GUILayout.Height(100f));  
         GUILayout.Label(textFormatting);
         GUILayout.EndScrollView();
         GUILayout.Label("-------------------------------\n");
+        //Displays dragged names
         DrawGameObjectNames();
+        //Text field properties
+        newName = EditorGUILayout.TextField("New GameObject Name: ", newName);
         prefix = EditorGUILayout.TextField("Add Prefix: ", prefix);
-        if (prefix != "" && !prefix.Contains(" "))
-        {
-            prefixAdded = true;
-            DrawPrefixSuffix();
-        }
-        else
-        {
-            prefixAdded = false;
-        }
         suffix = EditorGUILayout.TextField("Add Suffix: ", suffix);
-        if (suffix != "" && !suffix.Contains(" "))
+        enableEnumeration = EditorGUILayout.Toggle("Enumerate", enableEnumeration);
+        //Updates text based on edits
+        if ((newName != "" && !newName.Contains(" ")) || (prefix != "" && !prefix.Contains(" ")) || (suffix != "" && !suffix.Contains(" ")) || enableEnumeration)
         {
-            suffixAdded = true;
-            DrawPrefixSuffix();
+            if (newName != "" && !newName.Contains(" "))
+            {
+                newNameAdded = true;
+            }
+            else
+            {
+                newNameAdded = false;
+            }
+            DrawEdits();
         }
-        else
+        //Confirms the changes made
+        if (GUILayout.Button("Confirm Changes", GUILayout.Width(125f)))
         {
-            suffixAdded = false;
+            if (EditorUtility.DisplayDialog("Rename GameObjects?", "Are you sure you want to rename the selected GameObjects?", "Confirm", "Cancel"))
+            {
+                confirmChanges = true;
+                DrawEdits();
+                int i = 0;
+                foreach (GameObject obj in uniqueCheck)
+                {   
+                    obj.name = newGameObjectNames[i].ToString();
+                    i += 1;
+                }
+            }
         }
     }
 }
-
-/*
-Notes:
-
-[CanEditMultipleObjects]
-
-Repaint();
-
-Selection.gameObjects[0].name.ToString()
-
-    private string selectedGameObjects()
-    {
-        foreach (GameObject obj in Selection.gameObjects)
-        {
-            textFormatting += obj.name.ToString() + "\n";
-        }
-        return textFormatting;
-    }
-
- //EditorGUILayout.PropertyField(myObject, new GUIContent("Game Object"));
-        //EditorGUILayout.LabelField("Original\n-----\n"+selectedGameObjects());
-        //GUI.Box(new Rect(0, Screen.height / 2, Screen.width, Screen.height / 2), selectedGameObjects());
-        //if (GUILayout.Button("Add Selected GameObjects"))
-        //{
-        //    textFormatting = "";
-        //}
-
-
-
-                    foreach (GameObject obj in DragAndDrop.objectReferences)
-                {
-                    uniqueCheck.Add(obj);
-                }
-
-
-GUILayout.BeginArea(new Rect(0f, (Screen.height / 1.8f), 100, 100));
-GUILayout.Box("Original\n--------\n" + textFormatting, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height / 4));
-GUILayout.Box("New\n-----\n", GUILayout.Width(Screen.width), GUILayout.Height(Screen.height / 4));
-GUILayout.EndArea();
-     */
