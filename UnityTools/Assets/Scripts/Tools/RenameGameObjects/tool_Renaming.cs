@@ -64,14 +64,22 @@ public class tool_Renaming : EditorWindow
         }
         else
         {
-            foreach (GameObject obj in DragDropArea())
+            try
             {
-                if (!uniqueCheck.Contains(obj))
+                foreach (GameObject obj in DragDropArea())
                 {
-                    textFormatting += obj.name.ToString() + "\n";
-                    uniqueCheck.Add(obj); //Prevents duplicates from being added to list
+                    if (!uniqueCheck.Contains(obj))
+                    {
+                        textFormatting += obj.name.ToString() + "\n";
+                        uniqueCheck.Add(obj); //Prevents duplicates from being added to list
+                    }
                 }
             }
+            catch
+            {
+                Debug.Log("Only items of type GameObject may be renamed");
+            }
+                
         }
     }
 
@@ -154,7 +162,7 @@ public class tool_Renaming : EditorWindow
                     obj.name = newGameObjectNames[i].ToString();
                     i += 1;
                 }
-                Close();
+                //Close(); //Closes tool when changes are confirmed
             }
         }
     }
