@@ -3,29 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class tool_Renaming : EditorWindow
+public class tool_RenameGameObjects : EditorWindow
 {
     private Vector2 scrollPosition;
     private string textFormatting;
     private List<object> uniqueCheck = new List<object>();
     private object[] newGameObjectNames;
+    //[SerializeField]
+    //private GUISkin mySkin;
 
-    private string newName = "";
+    //Rename Options
     private bool newNameAdded = false;
+    private string newName = "";
 
     private string prefix = "";
     private string suffix = "";
 
     private bool enableEnumeration = false;
-    int enumNum = 0;
+    private int enumNum = 0;
 
     private bool confirmChanges = false;
+
+
 
     //Creates a custom unity window
     [MenuItem("Tools/Rename GameObjects")]
     private static void ToolWindow()
     {
-        GetWindow<tool_Renaming>("Rename GameObjects");
+        GetWindow<tool_RenameGameObjects>("Rename GameObjects");
     }
 
 
@@ -123,14 +128,18 @@ public class tool_Renaming : EditorWindow
     //Manages custom window interface display
     private void OnGUI()
     {
+        //GUI.skin = mySkin;
+        
         //GUI layout design
         GUILayout.Label("Click & Drag GameObjects Here\n-------------------------------");
         scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(Screen.width), GUILayout.Height(100f));  
         GUILayout.Label(textFormatting);
         GUILayout.EndScrollView();
         GUILayout.Label("-------------------------------\n");
+       
         //Displays dragged names
         DrawGameObjectNames();
+        
         //Text field properties
         newName = EditorGUILayout.TextField("New GameObject Name: ", newName);
         prefix = EditorGUILayout.TextField("Add Prefix: ", prefix);
@@ -162,7 +171,7 @@ public class tool_Renaming : EditorWindow
                     obj.name = newGameObjectNames[i].ToString();
                     i += 1;
                 }
-                //Close(); //Closes tool when changes are confirmed
+                ////Close(); //Closes tool when changes are confirmed
             }
         }
     }
