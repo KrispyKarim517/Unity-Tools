@@ -33,6 +33,7 @@ public class tool_KrispysRenamer : EditorWindow
     private Vector2 scrollPosition;
     private List<Checklist> gameObjectList = new List<Checklist>(); //Contains dragged GameObjects as Checklist
     private List<object> uniqueObjectList = new List<object>();  //Prevents duplicate GameObjects
+    private string find = "Enter: ";
 
     //Each dragged GameObject will be a Checklist item
     private class Checklist
@@ -87,7 +88,7 @@ public class tool_KrispysRenamer : EditorWindow
             try
             {
                 foreach (GameObject obj in DragDropArea())
-                { 
+                {
                     if (uniqueObjectList.Contains(obj) == false)
                     {
                         uniqueObjectList.Add(obj); //Prevents duplicates from being added to list
@@ -177,7 +178,7 @@ public class tool_KrispysRenamer : EditorWindow
 
     private void OnGUI()
     {
-        this.minSize = new Vector2(550f, 450f); //Sets the minimum size of the window
+        this.minSize = new Vector2(600f, 475f); //Sets the minimum size of the window
         EditorGUIUtility.labelWidth = 75f; //Formatting input area spacings
         BuildDataLists();
 
@@ -192,7 +193,7 @@ public class tool_KrispysRenamer : EditorWindow
         }
 
         //Title
-        GUILayout.Label("Rename GameObjects", GUILayout.Width(position.width));
+        GUILayout.Label("Rename GameObjects", GUILayout.Width(position.width), GUILayout.Height(75));
 
         //New Name
         newName = EditorGUILayout.TextField("New Name: ", newName, GUILayout.Width(position.width / 3));
@@ -221,16 +222,16 @@ public class tool_KrispysRenamer : EditorWindow
         }
 
         //Preview
-        GUILayout.BeginArea(new Rect(0, position.height - 35, position.width / 4, 100));
-        if (GUILayout.Button("Preview", GUILayout.Width(position.width / 4)))
+        GUILayout.BeginArea(new Rect(0, position.height - 55, position.width / 4, 100));
+        if (GUILayout.Button("Preview", GUILayout.Width(position.width / 4), GUILayout.Height(50)))
         {
             RenameGameObjects();
         }
         GUILayout.EndArea();
 
         //Confirm
-        GUILayout.BeginArea(new Rect(position.width / 4, position.height - 35, position.width / 4, 100));
-        if (GUILayout.Button("Confirm", GUILayout.Width(position.width / 4)))
+        GUILayout.BeginArea(new Rect(position.width / 4, position.height - 55, position.width / 4, 100));
+        if (GUILayout.Button("Confirm", GUILayout.Width(position.width / 4), GUILayout.Height(50)))
         {
             if (EditorUtility.DisplayDialog("Rename GameObjects?", "Are you sure you want to rename these GameObjects?", "Confirm", "Cancel"))
             {
@@ -253,8 +254,29 @@ public class tool_KrispysRenamer : EditorWindow
         }
         GUILayout.EndArea();
 
+        //Find and select
+        GUILayout.BeginArea(new Rect(position.width / 2, 17, position.width / 2, position.height));
+        if (GUILayout.Button("Find & Select", GUILayout.Width(position.width / 6)))
+        {
+            foreach(Checklist c in gameObjectList)
+            {
+                if (c.First.Contains(find) && find != "")
+                {
+                    c.Second = true;
+                }
+            }
+        }
+        GUILayout.BeginArea(new Rect(position.width / 6, 5, position.width / 2, position.height));
+        find = EditorGUILayout.TextField(find, GUILayout.Width(position.width / 3));
+        if (string.IsNullOrWhiteSpace(find))
+        {
+            find = "Enter: ";
+        }
+        GUILayout.EndArea();
+        GUILayout.EndArea();
+
         //Select All
-        GUILayout.BeginArea(new Rect(position.width / 2, 25, position.width / 2, position.height));
+        GUILayout.BeginArea(new Rect(position.width / 2, 48, position.width / 2, position.height));
         if (GUILayout.Button("Select All", GUILayout.Width(position.width / 6)))
         {
             foreach (Checklist c in gameObjectList)
@@ -265,7 +287,7 @@ public class tool_KrispysRenamer : EditorWindow
         GUILayout.EndArea();
 
         //Deselect All
-        GUILayout.BeginArea(new Rect((position.width / 6) + (position.width / 2), 25, position.width / 2, position.height));
+        GUILayout.BeginArea(new Rect((position.width / 6) + (position.width / 2), 48, position.width / 2, position.height));
         if (GUILayout.Button("Deselect All", GUILayout.Width(position.width / 6)))
         {
             foreach (Checklist c in gameObjectList)
@@ -276,7 +298,7 @@ public class tool_KrispysRenamer : EditorWindow
         GUILayout.EndArea();
 
         //Remove
-        GUILayout.BeginArea(new Rect((position.width / 3) + (position.width / 2), 25, position.width / 2, position.height));
+        GUILayout.BeginArea(new Rect((position.width / 3) + (position.width / 2), 48, position.width / 2, position.height));
         if (GUILayout.Button("Remove", GUILayout.Width(position.width / 6)))
         {
             foreach (Checklist c in gameObjectList.ToArray())
@@ -291,7 +313,7 @@ public class tool_KrispysRenamer : EditorWindow
         GUILayout.EndArea();
 
         //GameObject Checklist Area
-        GUILayout.BeginArea(new Rect(position.width / 2, 60, position.width / 2, position.height - 64));
+        GUILayout.BeginArea(new Rect(position.width / 2, 80, position.width / 2, position.height - 84));
         EditorGUILayout.HelpBox("Click & Drag GameObjects Here", MessageType.None);
         scrollPosition = GUILayout.BeginScrollView(scrollPosition);
         foreach (Checklist c in gameObjectList)
