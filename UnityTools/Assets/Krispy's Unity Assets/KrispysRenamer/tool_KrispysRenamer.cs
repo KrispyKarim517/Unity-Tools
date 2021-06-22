@@ -31,9 +31,11 @@ public class tool_KrispysRenamer : EditorWindow
 
     //GameObject handling
     private Vector2 scrollPosition;
+    private int scrollViewHeight = 85;
     private List<Checklist> gameObjectList = new List<Checklist>(); //Contains dragged GameObjects as Checklist
     private List<object> uniqueObjectList = new List<object>();  //Prevents duplicate GameObjects
-    private string find = "Enter: ";
+    private string searchOption = "";
+    private string find = "Type Here (Case Sensitive)";
 
     //Each dragged GameObject will be a Checklist item
     private class Checklist
@@ -178,7 +180,7 @@ public class tool_KrispysRenamer : EditorWindow
 
     private void OnGUI()
     {
-        this.minSize = new Vector2(600f, 475f); //Sets the minimum size of the window
+        this.minSize = new Vector2(615f, 475f); //Sets the minimum size of the window
         EditorGUIUtility.labelWidth = 75f; //Formatting input area spacings
         BuildDataLists();
 
@@ -206,7 +208,7 @@ public class tool_KrispysRenamer : EditorWindow
         suffix = EditorGUILayout.TextField("Add Suffix: ", suffix, GUILayout.Width(position.width / 3));
         GUILayout.Space(30);
 
-        //Letter Case
+        //Letter case
         letterCase = (CASE)EditorGUILayout.EnumPopup("Letter Case: ", letterCase, GUILayout.Width(position.width / 3));
         GUILayout.Space(30);
         
@@ -222,16 +224,16 @@ public class tool_KrispysRenamer : EditorWindow
         }
 
         //Preview
-        GUILayout.BeginArea(new Rect(0, position.height - 55, position.width / 4, 100));
-        if (GUILayout.Button("Preview", GUILayout.Width(position.width / 4), GUILayout.Height(50)))
+        GUILayout.BeginArea(new Rect(0, position.height - 40, position.width / 4, 100));
+        if (GUILayout.Button("Preview", GUILayout.Width(position.width / 4)))
         {
             RenameGameObjects();
         }
         GUILayout.EndArea();
 
         //Confirm
-        GUILayout.BeginArea(new Rect(position.width / 4, position.height - 55, position.width / 4, 100));
-        if (GUILayout.Button("Confirm", GUILayout.Width(position.width / 4), GUILayout.Height(50)))
+        GUILayout.BeginArea(new Rect(position.width / 4, position.height - 40, position.width / 4, 100));
+        if (GUILayout.Button("Confirm", GUILayout.Width(position.width / 4)))
         {
             if (EditorUtility.DisplayDialog("Rename GameObjects?", "Are you sure you want to rename these GameObjects?", "Confirm", "Cancel"))
             {
@@ -255,28 +257,31 @@ public class tool_KrispysRenamer : EditorWindow
         GUILayout.EndArea();
 
         //Find and select
-        GUILayout.BeginArea(new Rect(position.width / 2, 17, position.width / 2, position.height));
+        GUILayout.BeginArea(new Rect(position.width / 2, 10, position.width / 2, position.height));
         if (GUILayout.Button("Find & Select", GUILayout.Width(position.width / 6)))
         {
-            foreach(Checklist c in gameObjectList)
-            {
-                if (c.First.Contains(find) && find != "")
-                {
-                    c.Second = true;
-                }
-            }
-        }
-        GUILayout.BeginArea(new Rect(position.width / 6, 5, position.width / 2, position.height));
-        find = EditorGUILayout.TextField(find, GUILayout.Width(position.width / 3));
-        if (string.IsNullOrWhiteSpace(find))
-        {
-            find = "Enter: ";
+            searchOption = "Find & Select";
         }
         GUILayout.EndArea();
+
+        //Find and deselect
+        GUILayout.BeginArea(new Rect((position.width / 6) + (position.width / 2), 10, position.width / 2, position.height));
+        if (GUILayout.Button("Find & Deselect", GUILayout.Width(position.width / 6)))
+        {
+            searchOption = "Find & Deselect";
+        }
+        GUILayout.EndArea();
+
+        //Find and add from hierarchy
+        GUILayout.BeginArea(new Rect((position.width / 3) + (position.width / 2), 10, position.width / 2, position.height));
+        if (GUILayout.Button("Find & Add\nFrom Hierarchy", GUILayout.Width(position.width / 6), GUILayout.Height(31)))
+        {
+            searchOption = "Find & Add From Hierarchy";
+        }
         GUILayout.EndArea();
 
         //Select All
-        GUILayout.BeginArea(new Rect(position.width / 2, 48, position.width / 2, position.height));
+        GUILayout.BeginArea(new Rect(position.width / 2, 45, position.width / 2, position.height));
         if (GUILayout.Button("Select All", GUILayout.Width(position.width / 6)))
         {
             foreach (Checklist c in gameObjectList)
@@ -287,7 +292,7 @@ public class tool_KrispysRenamer : EditorWindow
         GUILayout.EndArea();
 
         //Deselect All
-        GUILayout.BeginArea(new Rect((position.width / 6) + (position.width / 2), 48, position.width / 2, position.height));
+        GUILayout.BeginArea(new Rect((position.width / 6) + (position.width / 2), 45, position.width / 2, position.height));
         if (GUILayout.Button("Deselect All", GUILayout.Width(position.width / 6)))
         {
             foreach (Checklist c in gameObjectList)
@@ -298,7 +303,7 @@ public class tool_KrispysRenamer : EditorWindow
         GUILayout.EndArea();
 
         //Remove
-        GUILayout.BeginArea(new Rect((position.width / 3) + (position.width / 2), 48, position.width / 2, position.height));
+        GUILayout.BeginArea(new Rect((position.width / 3) + (position.width / 2), 45, position.width / 2, position.height));
         if (GUILayout.Button("Remove", GUILayout.Width(position.width / 6)))
         {
             foreach (Checklist c in gameObjectList.ToArray())
@@ -313,14 +318,65 @@ public class tool_KrispysRenamer : EditorWindow
         GUILayout.EndArea();
 
         //GameObject Checklist Area
-        GUILayout.BeginArea(new Rect(position.width / 2, 80, position.width / 2, position.height - 84));
+        GUILayout.BeginArea(new Rect(position.width / 2, 80, position.width / 2, position.height - scrollViewHeight));
         EditorGUILayout.HelpBox("Click & Drag GameObjects Here", MessageType.None);
         scrollPosition = GUILayout.BeginScrollView(scrollPosition);
+        //Displaying Objects
         foreach (Checklist c in gameObjectList)
         {
             c.Second = GUILayout.Toggle(c.Second, c.First);
         }
         GUILayout.EndScrollView();
         GUILayout.EndArea();
+
+        //GameObject Searching
+        if (searchOption != "")
+        {
+            scrollViewHeight = 140;
+            GUILayout.BeginArea(new Rect(position.width / 2, position.height - 60, position.width / 2, position.height));
+            find = EditorGUILayout.TextField(find, GUILayout.Width(position.width / 2));
+            if (string.IsNullOrWhiteSpace(find))
+            {
+                find = "Type Here (Case Sensitive)";
+            }
+            GUILayout.BeginArea(new Rect(0, 20, position.width / 2, position.height));
+            if (GUILayout.Button("Search: " + searchOption))
+            {
+                switch (searchOption)
+                {
+                    case "Find & Select":
+                        foreach (Checklist c in gameObjectList)
+                        {
+                            if (c.First.Contains(find) && find != "")
+                            {
+                                c.Second = true;
+                            }
+                        }
+                        break;
+                    case "Find & Deselect":
+                        foreach (Checklist c in gameObjectList)
+                        {
+                            if (c.First.Contains(find) && find != "")
+                            {
+                                c.Second = false;
+                            }
+                        }
+                        break;
+                    case "Find & Add From Hierarchy":
+                        var tempList = FindObjectsOfType<GameObject>();
+                        foreach (GameObject obj in tempList)
+                        {
+                            if (uniqueObjectList.Contains(obj) == false && obj.name.ToString().Contains(find))
+                            {
+                                uniqueObjectList.Add(obj);
+                                gameObjectList.Add(new Checklist(obj.name.ToString(), false, obj));
+                            }
+                        }
+                        break;
+                }
+            }
+            GUILayout.EndArea();
+            GUILayout.EndArea();
+        }
     }
 }
