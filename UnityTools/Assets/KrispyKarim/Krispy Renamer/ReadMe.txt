@@ -1,5 +1,7 @@
 Krispy's Rename Tool
 --------------------
+To Use: Navigate to Unity's menu bar at the top of the editor and select Tools -> Krispy Renamer
+
 Two ways to make select gameobjects for editing:
 1. Click and Drag them onto tool window
 2. Use Find & Add From Hierarchy button to add all gameobjects from hierarchy with the name (case sensitive)
