@@ -37,7 +37,7 @@ Buttons:
 	-uncheck all gameobjects in edit area
 6. Remove
 	-remove checked gameobjects from edit area
-7. Reset Changes
+7. Reset
 	-reset all rename options
 8. Preview
 	-see changes made to gameobject names before confirming them

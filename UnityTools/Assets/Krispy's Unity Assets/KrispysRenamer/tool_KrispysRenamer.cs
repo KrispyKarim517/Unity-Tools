@@ -169,6 +169,10 @@ public class tool_KrispysRenamer : EditorWindow
                 //Change letter case
                 switch (letterCase)
                 {
+                    case (CASE.unchanged):
+                        var tempObj = c.Obj as GameObject; //Remember original name
+                        c.First = tempObj.name.ToString();
+                        break;
                     case (CASE.LowerCase):
                         foreach (Checklist _c in gameObjectList)
                         {
@@ -238,17 +242,38 @@ public class tool_KrispysRenamer : EditorWindow
             leadingZeros = EditorGUILayout.IntSlider(leadingZeros, 0, 10, GUILayout.Width(position.width / 3));
         }
 
+        //Reset
+        GUILayout.BeginArea(new Rect(0, position.height - 40, position.width / 6, 100));
+        if (GUILayout.Button("Reset", GUILayout.Width(position.width / 6)))
+        {
+            newName = "";
+            replaceOriginal = "";
+            replaceWith = "";
+            prefix = "";
+            suffix = "";
+            letterCase = CASE.unchanged;
+            enableEnum = false;
+            enumNumStr = "";
+            startNum = 0;
+            leadingZeros = 0;
+            step = 1;
+            searchOption = "";
+            find = "Type Here (Case Sensitive)";
+            RenameGameObjects();
+}
+        GUILayout.EndArea();
+
         //Preview
-        GUILayout.BeginArea(new Rect(0, position.height - 40, position.width / 4, 100));
-        if (GUILayout.Button("Preview", GUILayout.Width(position.width / 4)))
+        GUILayout.BeginArea(new Rect(position.width / 6, position.height - 40, position.width / 6, 100));
+        if (GUILayout.Button("Preview", GUILayout.Width(position.width / 6)))
         {
             RenameGameObjects();
         }
         GUILayout.EndArea();
 
         //Confirm
-        GUILayout.BeginArea(new Rect(position.width / 4, position.height - 40, position.width / 4, 100));
-        if (GUILayout.Button("Confirm", GUILayout.Width(position.width / 4)))
+        GUILayout.BeginArea(new Rect(position.width / 3, position.height - 40, position.width / 6, 100));
+        if (GUILayout.Button("Confirm", GUILayout.Width(position.width / 6)))
         {
             if (EditorUtility.DisplayDialog("Rename GameObjects?", "Are you sure you want to rename these GameObjects?", "Confirm", "Cancel"))
             {
