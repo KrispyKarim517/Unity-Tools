@@ -387,7 +387,7 @@ public class tool_KrispysRenamer : EditorWindow
                         }
                         gameObjectList.Sort(delegate (Checklist x, Checklist y)
                         {
-                            return Compare(x.First, y.First); //MAKE CODE ORIGINAL
+                            return Compare(x.First, y.First);
                         });
                         break;
                 }
