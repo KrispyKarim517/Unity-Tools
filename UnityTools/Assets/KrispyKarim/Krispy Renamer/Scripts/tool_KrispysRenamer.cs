@@ -255,6 +255,7 @@ public class tool_KrispysRenamer : EditorWindow
             step = 1;
             searchOption = "";
             find = "Type Here (Case Sensitive)";
+            scrollViewHeight = 85;
             RenameGameObjects();
         }
         GUILayout.EndArea();
