@@ -6,7 +6,7 @@ MonoImporter:
   defaultReferences:
   - m_ViewDataDictionary: {instanceID: 0}
   - darkTheme: {fileID: 11400000, guid: 405208c43f10e7d4fa7dfefd2cdcb72b, type: 2}
-  - lightTheme: {instanceID: 0}
+  - lightTheme: {fileID: 11400000, guid: 17cfcd736e23bf9418d09d811b54a821, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

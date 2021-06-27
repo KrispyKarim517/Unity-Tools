@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace KrispyRenamer
 {
-    //helper_NameEditing
-    public partial class helper_KrispyRenamer
+    public partial class helper_KrispyRenamer //helper_NameEditing
     {
         //Add Enumeration
         private void Enumeration()
@@ -13,7 +10,7 @@ namespace KrispyRenamer
             if (help.enableEnum == true)
             {
                 help.enumNumStr = help.enumNum.ToString();
-                help.enumNum += help.step; //Add step
+                help.enumNum += help.increment; //Add increment
                 if (help.leadingZeros > 0) //Add leading zeros
                 {
                     help.enumNumStr = help.enumNumStr.PadLeft(help.leadingZeros + 1, '0');

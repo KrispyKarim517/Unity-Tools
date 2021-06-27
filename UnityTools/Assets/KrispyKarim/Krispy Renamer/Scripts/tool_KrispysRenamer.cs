@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 
 namespace KrispyRenamer
@@ -16,6 +14,7 @@ namespace KrispyRenamer
 
 
 
+        //Makes sure we are using the same instance of the classes
         private void Awake()
         {
             helper.help = helper;
@@ -118,7 +117,7 @@ namespace KrispyRenamer
             GUILayout.Space(30);
 
             
-            //Letter case
+            //Letter Case
             helper.letterCase = (CASE)EditorGUILayout.EnumPopup("Letter Case: ", helper.letterCase, GUILayout.Width(position.width / 3));
             GUILayout.Space(30);
 
@@ -129,7 +128,7 @@ namespace KrispyRenamer
                 EditorGUILayout.PrefixLabel("Start At: ");
                 helper.startNum = EditorGUILayout.IntField(helper.startNum, GUILayout.Width(position.width / 3));
                 EditorGUILayout.PrefixLabel("Increment: ");
-                helper.step = EditorGUILayout.IntField(helper.step, GUILayout.Width(position.width / 3));
+                helper.increment = EditorGUILayout.IntField(helper.increment, GUILayout.Width(position.width / 3));
                 EditorGUILayout.PrefixLabel("Leading 0s: ");
                 helper.leadingZeros = EditorGUILayout.IntSlider(helper.leadingZeros, 0, 10, GUILayout.Width(position.width / 3));
             }
@@ -180,7 +179,7 @@ namespace KrispyRenamer
             GUILayout.EndArea();
 
 
-            //Find and select
+            //Find and Select
             GUILayout.BeginArea(new Rect(position.width / 2, 10, position.width / 2, position.height));
             if (GUILayout.Button("Find & Select", GUILayout.Width(position.width / 6)))
             {
@@ -189,7 +188,7 @@ namespace KrispyRenamer
             GUILayout.EndArea();
 
             
-            //Find and deselect
+            //Find and Deselect
             GUILayout.BeginArea(new Rect((position.width / 6) + (position.width / 2), 10, position.width / 2, position.height));
             if (GUILayout.Button("Find & Deselect", GUILayout.Width(position.width / 6)))
             {
@@ -198,7 +197,7 @@ namespace KrispyRenamer
             GUILayout.EndArea();
 
             
-            //Find and add from hierarchy
+            //Find and Add From Hierarchy
             GUILayout.BeginArea(new Rect((position.width / 3) + (position.width / 2), 10, position.width / 2, position.height));
             if (GUILayout.Button("Find & Add\nFrom Hierarchy", GUILayout.Width(position.width / 6), GUILayout.Height(31)))
             {
@@ -275,6 +274,7 @@ namespace KrispyRenamer
 
 
 
+        //Sets the state of a GameObject to checked or unchecked
         private void AllSelection(bool state)
         {
             foreach (Checklist c in helper.gameObjectList)
@@ -285,6 +285,7 @@ namespace KrispyRenamer
 
 
 
+        //Finds GameObjects that match the search field
         private void Search()
         {
             switch (helper.searchOption)

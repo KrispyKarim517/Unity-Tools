@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace KrispyRenamer
 {
-    //helper_Data
-    public partial class helper_KrispyRenamer
+    public partial class helper_KrispyRenamer //helper_Data
     {
+        //Maintaining one instance of this class
         public helper_KrispyRenamer help { get; set; }
 
         //Name editing
@@ -21,7 +20,7 @@ namespace KrispyRenamer
         public int enumNum;
         public int startNum = 0;
         public int leadingZeros = 0;
-        public int step = 1;
+        public int increment = 1;
 
         //GameObject handling
         public Vector2 scrollPosition;
@@ -31,6 +30,7 @@ namespace KrispyRenamer
         public string searchOption = "";
         public string find = "Type Here (Case Sensitive)";
 
+        //Resets data to original state
         public void ResetData()
         {
             newName = "";
@@ -43,7 +43,7 @@ namespace KrispyRenamer
             enumNumStr = "";
             startNum = 0;
             leadingZeros = 0;
-            step = 1;
+            increment = 1;
             scrollViewHeight = 85;
             searchOption = "";
             find = "Type Here (Case Sensitive)";
