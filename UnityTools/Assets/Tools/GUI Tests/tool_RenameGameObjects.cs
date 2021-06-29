@@ -26,12 +26,12 @@ public class tool_RenameGameObjects : EditorWindow
 
 
 
-    //Creates a custom unity window
-    [MenuItem("Tools/Rename")]
-    private static void ToolWindow()
-    {
-        GetWindow<tool_RenameGameObjects>("Rename");
-    }
+    ////Creates a custom unity window
+    //[MenuItem("Tools/Rename")]
+    //private static void ToolWindow()
+    //{
+    //    GetWindow<tool_RenameGameObjects>("Rename");
+    //}
 
 
     

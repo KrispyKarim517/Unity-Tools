@@ -246,7 +246,16 @@ namespace KrispyRenamer
             helper.scrollPosition = GUILayout.BeginScrollView(helper.scrollPosition);
             foreach (Checklist c in helper.gameObjectList)
             {
-                c.Second = GUILayout.Toggle(c.Second, c.First);
+                try
+                {
+                    c.Second = GUILayout.Toggle(c.Second, c.First);
+                }
+                catch
+                {
+                    //Argument Exception ignored, exception raised will not cause problems
+                    Debug.Log("Toggles were modified during layout event");
+                    continue;
+                }
             }
             GUILayout.EndScrollView();
             GUILayout.EndArea();

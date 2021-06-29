@@ -68,21 +68,15 @@ namespace KrispyRenamer
 
 
         //Change letter case
-        private void LetterCases()
+        private void LetterCases(Checklist c)
         {
             switch (help.letterCase)
             {
                 case (CASE.LowerCase):
-                    foreach (Checklist _c in help.gameObjectList)
-                    {
-                        _c.First = _c.First.ToLower();
-                    }
+                    c.First = c.First.ToLower();
                     break;
                 case (CASE.UpperCase):
-                    foreach (Checklist _c in help.gameObjectList)
-                    {
-                        _c.First = _c.First.ToUpper();
-                    }
+                    c.First = c.First.ToUpper();
                     break;
             }
         }
@@ -101,7 +95,7 @@ namespace KrispyRenamer
                     Enumeration();
                     SuffixPrefix();
                     NewName(c);
-                    LetterCases();
+                    LetterCases(c);
                 }
             }
         }
