@@ -12,6 +12,10 @@ namespace KrispyBuildAnalyzer
         public GUISkin darkTheme, lightTheme; //Window color theme
         #pragma warning restore CS0649
 
+        Vector2 scrollPosition;
+        helper_KrispysBuildAnalyzer helper;
+        BuildReport report;
+        BuildSummary summary;
 
 
         //Creates custom unity window
@@ -21,7 +25,23 @@ namespace KrispyBuildAnalyzer
             GetWindow<tool_KrispysBuildAnalyzer>("Krispy's Build Analyzer");
         }
 
+        //Builds the project
+        private void MyBuild()
+        {
+            BuildPlayerOptions build = new BuildPlayerOptions();
+            build.scenes = new[] { "Assets/Scenes/SampleScene.unity" };
+            build.locationPathName = "C:/Users/Karim Najib/Desktop/tempUnity";
+            build.target = BuildTarget.StandaloneWindows64;
+            build.options = BuildOptions.None;
 
+            report = BuildPipeline.BuildPlayer(build);
+            summary = report.summary;
+        }
+
+        private void Awake()
+        {
+            MyBuild();
+        }
 
         private void OnGUI()
         {
@@ -89,8 +109,12 @@ namespace KrispyBuildAnalyzer
             }
             GUILayout.EndArea();
 
+            //Data
             GUILayout.BeginArea(new Rect(position.width / 4, 80, (4 * position.width) / 3, position.height));
-            GUILayout.Box("My Box", GUILayout.Width((3 * position.width) / 4), GUILayout.Height(position.height - 80));
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width((3 * position.width) / 4), GUILayout.Height(position.height - 80));
+            GUILayout.Label("Total Build Size: " + ((summary.totalSize) * 0.000001).ToString() + " mb");
+            GUILayout.Label("Total Build Time: #");
+            GUILayout.EndScrollView();
             GUILayout.EndArea();
         }
     }
