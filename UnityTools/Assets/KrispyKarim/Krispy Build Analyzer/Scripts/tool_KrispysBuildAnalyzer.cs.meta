@@ -3,7 +3,10 @@ guid: 9b1f1fc68fd3f454b87169de5ec9910b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - darkTheme: {fileID: 11400000, guid: 31abb6f36f86f0b45b86aa0047c764ee, type: 2}
+  - lightTheme: {fileID: 11400000, guid: f50e2654f6e22fa41948b46518ae8c27, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
